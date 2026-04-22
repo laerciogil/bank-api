@@ -1,3 +1,5 @@
+app = "APPLICATION"
+
 def main() -> None:
     print("Hello from bank-api!")
 
