@@ -1,0 +1,24 @@
+repos:
+- repo: local
+  hooks:
+    - id: code-style-check
+      name: code-style-check
+      entry: make
+      args: ["code-style-check"]
+      language: system
+      pass_filenames: false
+      always_run: true
+    - id: quality-check
+      name: quality-check
+      entry: make
+      args: ["quality-check"]
+      language: system
+      pass_filenames: false
+      always_run: true
+    - id: code-static-check
+      name: code-static-check
+      entry: make
+      args: ["code-static-check"]
+      language: system
+      pass_filenames: false
+      always_run: true
