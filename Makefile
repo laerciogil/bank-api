@@ -125,7 +125,7 @@ quality-check: ## Perform an unit test running
 coverage-check: ## Generate coverage report
 	@(\
 		. $(PYTHON_BIN)/activate; \
-		uv run coverage; \
+		uv run coverage html; \
 	)
 
 .phony: run
