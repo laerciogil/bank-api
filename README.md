@@ -134,7 +134,7 @@ cd bank-api
 
 2. Install dependencies:
 ```bash
-npm install
+uv sync
 ```
 
 3. Set up environment variables:
@@ -145,12 +145,12 @@ cp .env.example .env
 
 4. Run database migrations:
 ```bash
-npm run migrate
+uv run alembic upgrade head
 ```
 
 5. Start the development server:
 ```bash
-npm run dev
+uv run python main.py
 ```
 
 ### Environment Variables
@@ -190,12 +190,12 @@ curl -X POST http://localhost:3000/api/transfers/internal \
 
 Run the test suite:
 ```bash
-npm test
+uv run pytest
 ```
 
 Run tests with coverage:
 ```bash
-npm run test:coverage
+uv run pytest --cov=src
 ```
 
 ## Contributing
