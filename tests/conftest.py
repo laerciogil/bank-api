@@ -9,6 +9,7 @@ def app():
     """Instance of main app"""
     return _app
 
+
 @pytest.fixture(scope="module")
 def client():
     """Instance of Client"""

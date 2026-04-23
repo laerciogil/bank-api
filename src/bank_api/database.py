@@ -10,5 +10,6 @@ if settings.environment == "PROD":
     engine = sa.create_engine(settings.database_url)
 else:
     engine = sa.create_engine(
-        settings.database_url, connect_args={"check_same_thread": False},
+        settings.database_url,
+        connect_args={"check_same_thread": False},
     )
