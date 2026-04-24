@@ -9,7 +9,7 @@ from pydantic import BaseModel
 
 from .config import settings
 
-SECRETE_KEY = settings.auth_secrete_key
+SECRETE_KEY = settings.auth_secret_key
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_SECONDS = 3600
 
