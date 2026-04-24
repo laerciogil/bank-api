@@ -42,7 +42,7 @@ def sign_jwt(user_id: str) -> dict[str, str]:
         "jti": uuid4().hex,
     }
     token = jwt.encode(payload, SECRETE_KEY, algorithm=ALGORITHM)
-    return {"access_token": token}
+    return {"access_token": token, "token_type": "bearer"}
 
 
 async def decode_jwt(token: str) -> JWTToken | None:
