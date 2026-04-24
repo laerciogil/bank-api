@@ -11,7 +11,6 @@ from .database import database, engine, metadata
 if TYPE_CHECKING:
     from collections.abc import AsyncIterator
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -28,7 +27,7 @@ app = FastAPI(title="Bank API",
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_HOSTS,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -39,7 +38,7 @@ app.include_router(auth.router)
 
 
 def run() -> None:
-    uvicorn.run(app, port=8000)
+    uvicorn.run(app, port=8000, host="0.0.0.0") # noqa: S104
 
 if __name__ == "__main__":
     run()
