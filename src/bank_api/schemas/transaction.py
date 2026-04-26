@@ -8,6 +8,7 @@ class TransactionType(StrEnum):
     WITHDRAW = "withdraw"
     TRANSFER = "transfer"
 
+
 class TransactionRequest(BaseModel):
     account_id: int
     type: TransactionType

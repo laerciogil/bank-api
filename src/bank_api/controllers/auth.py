@@ -10,6 +10,7 @@ if TYPE_CHECKING:
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
+
 @router.post("/login", response_model=LoginResponse)
 async def login(data: LoginRequest) -> LoginResponse:
     response = sign_jwt(user_id=str(data.user_id))

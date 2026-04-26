@@ -10,6 +10,7 @@ class TransactionType(StrEnum):
     WITHDRAW = "withdraw"
     TRANSFER = "transfer"
 
+
 transactions = sa.Table(
     "transaction",
     metadata,

@@ -20,10 +20,13 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     yield
     await database.disconnect()
 
-app = FastAPI(title="Bank API",
-              version="0.1.0",
-              description="API to manage bank accounts",
-              lifespan=lifespan)
+
+app = FastAPI(
+    title="Bank API",
+    version="0.1.0",
+    description="API to manage bank accounts",
+    lifespan=lifespan,
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -38,7 +41,8 @@ app.include_router(auth.router)
 
 
 def run() -> None:
-    uvicorn.run(app, port=8000, host="0.0.0.0") # noqa: S104
+    uvicorn.run(app, port=8000, host="0.0.0.0")  # noqa: S104
+
 
 if __name__ == "__main__":
     run()
