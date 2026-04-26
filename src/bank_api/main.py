@@ -5,7 +5,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .controllers import account, auth, root
+from .controllers import account, auth, root, transaction
 from .database import database, engine, metadata
 
 if TYPE_CHECKING:
@@ -39,6 +39,7 @@ app.add_middleware(
 app.include_router(root.router)
 app.include_router(auth.router)
 app.include_router(account.router)
+app.include_router(transaction.router)
 
 
 def run() -> None:
