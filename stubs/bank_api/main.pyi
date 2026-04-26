@@ -10,8 +10,6 @@ from .database import database as database
 from .database import engine as engine
 from .database import metadata as metadata
 
-ALLOWED_HOSTS: Incomplete
-
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]: ...
 
