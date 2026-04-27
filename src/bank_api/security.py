@@ -34,7 +34,7 @@ def sign_jwt(user_id: str) -> dict[str, str]:
     now = time.time()
     payload = {
         "iss": "bank-api",
-        "sub": user_id,
+        "sub": str(user_id),
         "aud": "bank-api-users",
         "exp": now + ACCESS_TOKEN_EXPIRE_SECONDS,
         "iat": now,
@@ -47,7 +47,9 @@ def sign_jwt(user_id: str) -> dict[str, str]:
 
 async def decode_jwt(token: str) -> JWTToken | None:
     try:
-        payload = jwt.decode(token, SECRETE_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(
+            token, SECRETE_KEY, algorithms=[ALGORITHM], audience="bank-api-users",
+        )
         _token = JWTToken(credentials=token, access_token=AccessToken(**payload))
         return _token if _token.access_token.exp > time.time() else None
     except jwt.PyJWTError as e:
