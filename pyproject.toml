@@ -68,6 +68,7 @@ ignore = ["D", "T201", "INP001"]
 
 [tool.ruff.lint.flake8-type-checking]
 runtime-evaluated-base-classes = ["pydantic.BaseModel"]
+runtime-evaluated-decorators = ["router.post", "fastapi.APIRouter.post"]
 
 [tool.ruff.format]
 quote-style = "double"

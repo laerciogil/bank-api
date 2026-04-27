@@ -1,12 +1,8 @@
-from typing import TYPE_CHECKING
-
 from fastapi import APIRouter
 
+from bank_api.schemas.auth import LoginRequest
 from bank_api.security import sign_jwt
 from bank_api.views.auth import LoginResponse
-
-if TYPE_CHECKING:
-    from bank_api.schemas.auth import LoginRequest
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 

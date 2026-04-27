@@ -1,13 +1,9 @@
-from typing import TYPE_CHECKING
-
 from fastapi import APIRouter, Depends, status
 
+from bank_api.schemas.transaction import TransactionRequest
 from bank_api.security import login_required
 from bank_api.service.transaction import TransactionService
 from bank_api.views.transaction import TransactionResponse
-
-if TYPE_CHECKING:
-    from bank_api.schemas.transaction import TransactionRequest
 
 router = APIRouter(
     prefix="/transactions",

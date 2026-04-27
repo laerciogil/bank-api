@@ -1,15 +1,11 @@
-from typing import TYPE_CHECKING
-
 from fastapi import APIRouter, Depends, status
 
+from bank_api.schemas.account import AccountRequest
 from bank_api.security import login_required
 from bank_api.service.account import AccountService
 from bank_api.service.transaction import TransactionService
 from bank_api.views.account import AccountResponse
 from bank_api.views.transaction import TransactionResponse
-
-if TYPE_CHECKING:
-    from bank_api.schemas.account import AccountRequest
 
 router = APIRouter(
     prefix="/accounts",
