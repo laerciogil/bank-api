@@ -1,128 +1,82 @@
 # Bank API
 
-A comprehensive RESTful API for banking operations built with modern web technologies.
+A RESTful API for basic banking operations built with FastAPI and SQLAlchemy.
 
 ## Overview
 
-This project is a study implementation of a banking API that provides core financial services through a secure and scalable RESTful interface. The API follows industry best practices for security, data validation, and error handling.
+This project is a fictitious banking API for learning purposes that provides core financial services through a secure RESTful interface. The API implements basic account management, transaction processing, and JWT-based authentication.
 
 ## Tech Stack
 
-- **Backend Framework**: Python/FastAPI
-- **Database**: PostgreSQL or SQLite
-- **Authentication**: JWT (JSON Web Tokens)
-- **API Documentation**: OpenAPI/Swagger
-- **Testing**: pytest
+- **Backend Framework**: FastAPI 0.136.0+
+- **Database**: SQLite (development) / PostgreSQL (production)
+- **ORM**: SQLAlchemy with databases library for async support
+- **Authentication**: JWT (JSON Web Tokens) using PyJWT
+- **Data Validation**: Pydantic v2
+- **Package Management**: UV
+- **Testing**: pytest with httpx for async testing
+- **Code Quality**: ruff for linting and formatting, mypy for type checking
 
 ## Current Features
 
-### Core Banking Operations
-- Account management
-- Balance inquiries
-- Transaction history
+### Authentication
+- JWT-based authentication with user login
+- Protected endpoints requiring authentication
+- Simple user ID-based login system
 
-### API Endpoints
+### Account Management
+- Create new accounts with user ID and initial balance
+- List accounts with pagination (limit/skip)
+- View account transaction history
 
-#### Accounts
-- `GET /api/accounts` - List all accounts
-- `GET /api/accounts/{id}` - Get account details
-- `POST /api/accounts` - Create new account
-- `PUT /api/accounts/{id}` - Update account information
-- `DELETE /api/accounts/{id}` - Close account
+### Transaction Processing
+- Create transactions of three types:
+  - **Deposit**: Add funds to an account
+  - **Withdraw**: Remove funds from an account
+  - **Transfer**: Move funds between accounts
+- View transaction history for accounts
+- Transaction validation and error handling
 
-#### Transactions
-- `GET /api/transactions` - List transactions
-- `GET /api/transactions/{id}` - Get transaction details
-- `POST /api/transactions` - Create transaction
+## API Endpoints
 
-## Future Implementations
+### Authentication
+- `POST /auth/login` - Authenticate user and receive JWT token
 
-### Authentication & Authorization
-- **User Registration & Login**
-  - `POST /api/auth/register` - User registration
-  - `POST /api/auth/login` - User authentication
-  - `POST /api/auth/logout` - User logout
-  - `POST /api/auth/refresh` - Token refresh
+### Accounts
+- `GET /accounts` - List all accounts (requires authentication)
+  - Query parameters: `limit` (required), `skip` (optional, default: 0)
+- `POST /accounts` - Create new account (requires authentication)
+- `GET /accounts/{account_id}/transactions` - Get account transactions (requires authentication)
+  - Query parameters: `limit` (required), `skip` (optional, default: 0)
 
-- **Role-Based Access Control**
-  - Admin roles for bank operations
-  - Customer roles for personal banking
-  - Teller roles for branch operations
+### Transactions
+- `POST /transactions` - Create new transaction (requires authentication)
+  - Supported types: `deposit`, `withdraw`, `transfer`
 
-### Enhanced Account Management
-- **Account Types**
-  - Checking accounts
-  - Savings accounts
-  - Credit accounts
-  - Investment accounts
+### Root
+- `GET /` - Welcome message and API info
 
-- **Account Features**
-  - Account statements
-  - Account limits and restrictions
-  - Joint accounts
-  - Account freezing/unfreezing
-  - Overdraft protection
+## Database Schema
 
-### Banking Transactions
-- **Transfers**
-  - `POST /api/transfers/internal` - Internal account transfers
-  - `POST /api/transfers/external` - External bank transfers
-  - `POST /api/transfers/international` - International wire transfers
-  - `GET /api/transfers/history` - Transfer history
+### Accounts Table
+- `id` (Integer, Primary Key)
+- `user_id` (Integer, Not Null)
+- `balance` (Numeric(10,2), Not Null)
+- `created_at` (Timestamp with timezone)
 
-- **Deposits & Withdrawals**
-  - `POST /api/deposits/cash` - Cash deposits
-  - `POST /api/deposits/check` - Check deposits
-  - `POST /api/withdrawals/cash` - Cash withdrawals
-  - `POST /api/withdrawals/atm` - ATM withdrawals
-
-- **Payments & Bills**
-  - `POST /api/payments/bills` - Bill payments
-  - `POST /api/payments/recurring` - Recurring payments
-  - `GET /api/payments/scheduled` - Scheduled payments
-  - `POST /api/payments/cancel` - Cancel payment
-
-### Advanced Features
-- **Card Management**
-  - Debit card issuance
-  - Credit card management
-  - Card blocking/unblocking
-  - PIN management
-
-- **Notifications**
-  - SMS alerts
-  - Email notifications
-  - Push notifications
-  - Transaction alerts
-
-- **Reporting & Analytics**
-  - Account summaries
-  - Transaction reports
-  - Spending analytics
-  - Tax documents
-
-## Security Features
-
-- JWT-based authentication
-- Rate limiting
-- Input validation and sanitization
-- HTTPS enforcement
-- CORS configuration
-- SQL injection prevention
-- XSS protection
-
-## API Documentation
-
-Once the server is running, you can access the interactive API documentation at:
-- Swagger UI: `http://localhost:3000/api-docs`
-- OpenAPI JSON: `http://localhost:3000/api-docs.json`
+### Transactions Table
+- `id` (Integer, Primary Key)
+- `account_id` (Integer, Foreign Key to accounts.id)
+- `type` (Enum: deposit, withdraw, transfer)
+- `amount` (Numeric(10,2), Not Null)
+- `created_at` (Timestamp with timezone)
 
 ## Getting Started
 
 ### Prerequisites
-- Python 3.14 or higher
-- Database server (PostgreSQL or SQLite)
-- Environment variables configuration
+- Python 3.14+
+- UV package manager
+- SQLite (for development) or PostgreSQL (for production)
 
 ### Installation
 
@@ -132,34 +86,33 @@ git clone <repository-url>
 cd bank-api
 ```
 
-2. Install dependencies:
+2. Set up development environment:
 ```bash
-uv sync
+make dev-setup
 ```
 
-3. Set up environment variables:
+3. Configure environment variables:
 ```bash
 cp .env.example .env
 # Edit .env with your configuration
 ```
 
-4. Run database migrations:
+### Running the Application
+
+Start the development server:
 ```bash
-uv run alembic upgrade head
+make run
+# Or
+uv run bank-api
 ```
 
-5. Start the development server:
-```bash
-uv run python main.py
-```
+The API will be available at `http://localhost:8000`
 
 ### Environment Variables
 
 ```env
-PORT=3000
-DATABASE_URL=<your-database-url>
-JWT_SECRET=<your-jwt-secret>
-JWT_EXPIRES_IN=24h
+DATABASE_URL=sqlite:///./bank.db  # or postgresql://user:pass@localhost/dbname
+ENVIRONMENT=DEV  # or PROD
 ```
 
 ## API Usage Examples
@@ -167,53 +120,114 @@ JWT_EXPIRES_IN=24h
 ### Authentication
 ```bash
 # Login
-curl -X POST http://localhost:3000/api/auth/login \
+curl -X POST http://localhost:8000/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"email": "user@example.com", "password": "password"}'
+  -d '{"user_id": 1}'
 ```
 
-### Get Account Balance
+### Create Account
 ```bash
-curl -X GET http://localhost:3000/api/accounts/123/balance \
+curl -X POST http://localhost:8000/accounts \
+  -H "Authorization: Bearer <jwt-token>" \
+  -H "Content-Type: application/json" \
+  -d '{"user_id": 1, "balance": 1000.00}'
+```
+
+### Create Transaction
+```bash
+# Deposit
+curl -X POST http://localhost:8000/transactions \
+  -H "Authorization: Bearer <jwt-token>" \
+  -H "Content-Type: application/json" \
+  -d '{"account_id": 1, "type": "deposit", "amount": 500.00}'
+
+# Withdraw
+curl -X POST http://localhost:8000/transactions \
+  -H "Authorization: Bearer <jwt-token>" \
+  -H "Content-Type: application/json" \
+  -d '{"account_id": 1, "type": "withdraw", "amount": 200.00}'
+```
+
+### List Accounts
+```bash
+curl -X GET "http://localhost:8000/accounts?limit=10&skip=0" \
   -H "Authorization: Bearer <jwt-token>"
 ```
 
-### Make a Transfer
+## Development
+
+### Code Quality
+
+Run code quality checks:
 ```bash
-curl -X POST http://localhost:3000/api/transfers/internal \
-  -H "Authorization: Bearer <jwt-token>" \
-  -H "Content-Type: application/json" \
-  -d '{"fromAccount": "123", "toAccount": "456", "amount": 100.00}'
+make code-style-check    # Linting with ruff
+make code-style-format   # Format code with ruff
+make code-static-check   # Type checking with mypy
 ```
 
-## Testing
+### Testing
 
 Run the test suite:
 ```bash
-uv run pytest
+make quality-check    # Run tests with coverage
 ```
 
-Run tests with coverage:
-```bash
-uv run pytest --cov=src
+### Available Make Commands
+
+- `make dev-setup` - Set up development environment
+- `make run` - Run the application
+- `make clean` - Clean cache and temp files
+- `make clean-all` - Clean all files including virtual environment
+- `make code-style-check` - Run linting
+- `make code-style-format` - Format code
+- `make code-static-check` - Run type checking
+- `make quality-check` - Run tests with coverage
+- `make help` - Show all available commands
+
+## Project Structure
+
+```
+src/bank_api/
+├── __init__.py
+├── main.py              # FastAPI application entry point
+├── config.py            # Configuration settings
+├── database.py          # Database connection and metadata
+├── security.py          # JWT authentication utilities
+├── exceptions.py        # Custom exception classes
+├── controllers/         # API route handlers
+│   ├── auth.py         # Authentication endpoints
+│   ├── account.py      # Account management endpoints
+│   ├── transaction.py  # Transaction endpoints
+│   └── root.py         # Root endpoint
+├── models/              # Database models
+│   ├── account.py      # Account table definition
+│   └── transaction.py  # Transaction table definition
+├── schemas/             # Pydantic schemas for request/response
+│   ├── auth.py         # Authentication schemas
+│   ├── account.py      # Account schemas
+│   └── transaction.py  # Transaction schemas
+├── views/               # Response models
+├── service/             # Business logic layer
+└── tests/               # Test files
 ```
 
-## Contributing
+## Error Handling
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new functionality
-5. Submit a pull request
+The API implements custom error handling for:
+- **404 Not Found**: Account not found errors
+- **409 Conflict**: Business logic errors (e.g., insufficient funds)
+
+## Security Features
+
+- JWT-based authentication for protected endpoints
+- Input validation using Pydantic models
+- CORS middleware configured for development
+- SQL injection prevention through SQLAlchemy ORM
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Contact
-
-For questions or support, please contact [your-email@example.com].
+This project is licensed under the MIT License.
 
 ---
 
-**Note**: This is a study project for educational purposes. Do not use in production without proper security audits and compliance checks.
+**Note**: This is a fictitious banking API created for educational purposes. Do not use in production without proper security audits and compliance checks.
